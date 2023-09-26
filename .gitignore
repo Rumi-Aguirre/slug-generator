@@ -1,6 +1,7 @@
 # Composer
 /composer.lock
 /vendor/
+.idea
 
 # PHP Unit
 /.phpunit.result.cache
