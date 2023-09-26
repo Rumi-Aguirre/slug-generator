@@ -79,16 +79,21 @@ class SlugGenerator implements SlugGeneratorInterface
 
 		/** @var string $text */
 		$text = \Normalizer::normalize($text, \Normalizer::FORM_C);
-		$text = $this->removeIgnored($text, $options->getIgnoreChars());
+        if (!$options->getAllowAllChars()) {
+		    $text = $this->removeIgnored($text, $options->getIgnoreChars());
+        }
 		$text = $this->transform($text, $options->getValidChars(), $options->getTransforms(), $options->getLocale());
-		$text = $this->removeIgnored($text, $options->getIgnoreChars());
+		if (!$options->getAllowAllChars()) {
+		    $text = $this->removeIgnored($text, $options->getIgnoreChars());
+        }
 
         return $this->replaceWithDelimiter(
             $text,
             $options->getValidChars(),
             $options->getDelimiter(),
             $options->getKeepBeginningDelimiter(),
-            $options->getKeepEndDelimiter()
+            $options->getKeepEndDelimiter(),
+            $options->getAllowAllChars(),
         );
 	}
 
@@ -119,17 +124,22 @@ class SlugGenerator implements SlugGeneratorInterface
         string $valid,
         string $delimiter,
         bool $keepBeginningDelimiter,
-        bool $keepEndDelimiter
+        bool $keepEndDelimiter,
+        bool $allowAllChars,
     ): string
 	{
 		$quoted = preg_quote($delimiter);
 
 		// Replace all invalid characters with a single delimiter
-		$replaced = preg_replace(
-			'((?:[^'.$valid.']|'.$quoted.')+)us',
-			$delimiter,
-			$text
-		);
+        if ($allowAllChars) {
+            $replaced = str_replace(' ', $delimiter, $text);
+        } else {
+            $replaced = preg_replace(
+                '((?:[^' . $valid . ']|' . $quoted . ')+)us',
+                $delimiter,
+                $text
+            );
+        }
 
 		if ($replaced === null) {
 			throw new \RuntimeException(sprintf('Failed to replace "%s" with "%s" in "%s".', '(?:[^'.$valid.']|'.$quoted.')+', $delimiter, $text));

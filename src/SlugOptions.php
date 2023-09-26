@@ -62,6 +62,7 @@ class SlugOptions implements \IteratorAggregate
 
     private bool $keepBeginningDelimiter = false;
     private bool $keepEndDelimiter = false;
+    private bool $allowAllChars = false;
 
 	/**
 	 * @param iterable<string,mixed> $options See the setter methods for available options
@@ -316,6 +317,20 @@ class SlugOptions implements \IteratorAggregate
         return $this->keepEndDelimiter;
     }
 
+    public function setAllowAllChars(bool $allowAllChars): self
+    {
+        $this->allowAllChars = $allowAllChars;
+        $this->setOptions['allowAllChars'] = null;
+
+        return $this;
+    }
+
+    public function getAllowAllChars(): bool
+    {
+        return $this->allowAllChars;
+    }
+
+
 	/**
 	 * @throws \InvalidArgumentException If it’s an invalid option name
 	 */
@@ -331,6 +346,7 @@ class SlugOptions implements \IteratorAggregate
 			'postTransforms',
             'keepBeginningDelimiter',
             'keepEndDelimiter',
+            'allowAllChars',
 		];
 
 		if (!\in_array($option, $validOptions, true)) {
