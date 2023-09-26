@@ -132,7 +132,7 @@ class SlugGenerator implements SlugGeneratorInterface
 
 		// Replace all invalid characters with a single delimiter
         if ($allowAllChars) {
-            $replaced = $text;
+            $replaced = str_replace(' ', $delimiter, $text);
         } else {
             $replaced = preg_replace(
                 '((?:[^' . $valid . ']|' . $quoted . ')+)us',
