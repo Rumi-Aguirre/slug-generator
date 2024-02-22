@@ -21,6 +21,4 @@ updates:
       - ipradasgomez
     reviewers:
       - freepik-company/backend
-      - Rumi-Aguirre
-      - ipradasgomez
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 5
